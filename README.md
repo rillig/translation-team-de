@@ -11,6 +11,8 @@ Anmerkung: die hier aufgezählten Dokumente sind keine Richtlinien, die man unbe
 
 # Übersetzen
 
+## Regelwerke anderer Projekte
+
 * Debian: https://www.debian.org/international/German/
 * GNOME: https://wiki.gnome.org/TranslationProject
 * KDE: http://i18n.kde.org/
@@ -19,15 +21,7 @@ Anmerkung: die hier aufgezählten Dokumente sind keine Richtlinien, die man unbe
 * http://fuelproject.org/styleguide/index
 * https://wiki.debian.org/Wortliste
 
-# Korrekturlesen
-
-* Der Korrekturleser lädt die .po-Datei herunter und schreibt seine Vorschläge direkt in die Datei
-* Der Korrekturleser schickt die .po-Datei an den ursprünglichen Übersetzer
-* Der Übersetzer benutzt ein Tool zum Vergleichen von Dateien (WinMerge, Eclipse, Notepad++, Emacs) und pflegt die Korrekturvorschläge ein
-
-# Testen
-
-# Kram
+## Notizen
 
 * Dateicodierung der .po-Dateien: UTF-8
 * Anführungszeichen: entweder „so“ oder »so«, aber pro Datei immer einheitlich
@@ -37,9 +31,17 @@ Anmerkung: die hier aufgezählten Dokumente sind keine Richtlinien, die man unbe
 * Großschreibung am Anfang eines Satzes: ja
 * Großschreibung am Anfang jeder Message: derzeit uneinheitlich
 
-## [y/n] – [j/n], [yes/no] – [ja/nein]
+## Übersetzen von [y/n] – [j/n], [yes/no] – [ja/nein]
 
 Je nachdem, wie der Programmcode aussieht, muss das [y/n] entweder so belassen werden oder in [j/n] übersetzt werden.
 
 * Wenn im Programmcode `rpmatch` auftaucht, ist [j/n] die richtige Variante
 * Wenn im Programmcode `ch == 'y'` oder etwas ähnliches auftaucht, muss auch in der Übersetzung das `y` bleiben
+
+# Korrekturlesen
+
+Ablauf:
+
+1. Der Korrekturleser lädt die .po-Datei herunter und schreibt seine Vorschläge direkt in die Datei
+1. Der Korrekturleser schickt die .po-Datei an den ursprünglichen Übersetzer
+1. Der Übersetzer benutzt ein Tool zum Vergleichen von Dateien (WinMerge, Eclipse, Notepad++, Emacs) und pflegt die Korrekturvorschläge ein
