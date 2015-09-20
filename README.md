@@ -1,6 +1,6 @@
 # translation-team-de
 
-Dokumentensammlung für das Deutsch-Team von translationproject.org
+Dokumentensammlung für das [Deutsch-Team](http://translationproject.org/team/de.html) von translationproject.org
 
 Anmerkung: die hier aufgezählten Dokumente sind keine Richtlinien, die man unbedingt befolgen muss, sondern freiwillig.
 
