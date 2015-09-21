@@ -23,7 +23,7 @@ function proofread(msg, id, msgid, msgstr)
 end
 
 function warn(msg, warning)
-  function color(n) return string.char(0x1B) .. "[" .. n .. "m" end
+  function color(n) return os.getenv("USERPROFILE") == nil and string.char(0x1B) .. "[" .. n .. "m" or "" end
   function fmtmsg(s) return "\"" .. s:gsub("\\n(.)", "\\n\"\n\"%1") .. "\"" end
   print(color(32) .. "id: " .. msg.id .. color(0))
   print(color(32) .. "msgid: " .. fmtmsg(msg.msgid) .. color(0))
