@@ -24,11 +24,12 @@ end
 
 function warn(msg, warning)
   function color(n) return string.char(0x1B) .. "[" .. n .. "m" end
+  function fmtmsg(s) return "\"" .. s:gsub("\\n(.)", "\\n\"\n\"%1") .. "\"" end
   print(color(32) .. "id: " .. msg.id .. color(0))
-  print(color(32) .. "msgid: " .. msg.msgid .. color(0))
+  print(color(32) .. "msgid: " .. fmtmsg(msg.msgid) .. color(0))
   for k, v in pairs(msg) do
     if k:find("^msgstr") then
-      print(k .. ": " .. msg[k])
+      print(k .. ": " .. fmtmsg(msg[k]))
     end
   end
   print(color(33) .. "W: " .. warning .. color(0))
