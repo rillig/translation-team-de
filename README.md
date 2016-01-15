@@ -40,7 +40,7 @@ Je nachdem, wie der Programmcode aussieht, muss das [y/n] entweder so belassen w
 
 # Korrekturlesen
 
-Ablauf:
+Möglicher Ablauf:
 
 1. Der Korrekturleser lädt die .po-Datei herunter und schreibt seine Vorschläge direkt in die Datei
 1. Der Korrekturleser schickt die .po-Datei an den ursprünglichen Übersetzer
