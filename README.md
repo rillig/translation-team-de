@@ -18,7 +18,7 @@ Anmerkung: die hier aufgezählten Dokumente sind keine Richtlinien, die man unbe
 * KDE: http://i18n.kde.org/
 * Microsoft: [Terminologie](http://www.microsoft.com/Language/en-US/Terminology.aspx), [Style Guide](http://www.microsoft.com/Language/en-US/StyleGuides.aspx)
 * http://sourceforge.net/p/translation/mailman/message/33262772/ (Mail von Mario)
-* http://fuelproject.org/styleguide/index
+* http://fuelproject.org/portfolio/german/
 * https://wiki.debian.org/Wortliste
 
 ## Notizen
