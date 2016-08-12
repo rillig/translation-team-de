@@ -2,22 +2,22 @@
 
 function proofread(msg, id, msgid, msgstr)
   if msgid:find("^[Uu]sage:") and not msgstr:find("^Aufruf:") then
-    warn(msg, "usage => Aufruf")
+    warn(msg, "'usage' sollte mit 'Aufruf' übersetzt werden.")
   end
   if msgid:find("^%s") and not msgstr:find("^%s") then
-    warn(msg, "leading whitespace")
+    warn(msg, "Im Englischen Text sind Leerzeichen am Zeilenanfang.")
   end
   if msgid:find("%s$") and not msgstr:find("%s$") then
-    warn(msg, "trailing whitespace")
+    warn(msg, "Im Englischen Text sind Leerzeichen am Zeilenende.")
   end
   if msgid:find("failed") and msgstr:find("fehlgeschlagen") then
-    warn(msg, "failed => fehlgeschlagen")
+    warn(msg, "'failed' sollte nicht mit 'fehlgeschlagen' übersetzt werden. Besser ist 'konnte nicht geöffnet werden'.")
   end
   if msgstr:find("kann nicht") then
-    warn(msg, "kann nicht")
+    warn(msg, "Statt 'kann nicht' lieber 'konnte nicht', damit es nicht nach einer allgemeinen Regel klingt.")
   end
   if msgid:find("seek") and not msgstr:find("spr[iu]ng") then
-    warn(msg, "seek => springen/gesprungen")
+    warn(msg, "'seek' sollte mit 'springen/gesprungen' übersetzt werden. (Nicht mit 'search', da das zu viele andere Bedeutungen hat.)")
   end
   --warn(msg,"test")
 end
