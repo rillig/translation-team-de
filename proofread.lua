@@ -1,31 +1,37 @@
 -- usage: lua proofread.lua <file>…
 
 function proofread(msg, id, msgid, msgstr)
+  if msgstr == "" or msgstr == msgid or msg.fuzzy then
+    return
+  end
   if msgid:find("^[Uu]sage:") and not msgstr:find("^Aufruf:") then
-    warn(msg, "'usage' sollte mit 'Aufruf' übersetzt werden.")
+    warn(msg, "»usage« sollte mit »Aufruf« übersetzt werden.")
   end
   if msgid:find("^%s") and not msgstr:find("^%s") then
-    warn(msg, "Im Englischen Text sind Leerzeichen am Zeilenanfang.")
+    warn(msg, "Da im englischen Text Leerzeichen am Zeilenanfang sind, sollte das im deutschen Text auch so sein.")
   end
   if msgid:find("%s$") and not msgstr:find("%s$") then
-    warn(msg, "Im Englischen Text sind Leerzeichen am Zeilenende.")
+    warn(msg, "Da im englischen Text Leerzeichen am Zeilenende sind, sollte das im deutschen Text auch so sein.")
   end
-  if msgid:find("failed") and msgstr:find("fehlgeschlagen") then
-    warn(msg, "'failed' sollte nicht mit 'fehlgeschlagen' übersetzt werden. Besser ist 'konnte nicht geöffnet werden'.")
+  if msgid:find("seek") and not msgstr:find("[Ss]pr[iu]ng") and not msgstr:find("[Ss]eek") then
+    warn(msg, "»seek« sollte mit »springen/gesprungen« übersetzt werden. (Nicht mit »search«, da das zu viele andere Bedeutungen hat.)")
   end
-  if msgstr:find("kann nicht") then
-    warn(msg, "Statt 'kann nicht' lieber 'konnte nicht', damit es nicht nach einer allgemeinen Regel klingt.")
+  if msgstr:find("\"") then
+    warn(msg, "Im deutschen Text sollten keine \"geraden\", sondern „diese“ oder »jene« Anführungszeichen benutzt werden.")
   end
-  if msgid:find("seek") and not msgstr:find("spr[iu]ng") then
-    warn(msg, "'seek' sollte mit 'springen/gesprungen' übersetzt werden. (Nicht mit 'search', da das zu viele andere Bedeutungen hat.)")
+  if msgstr:find("%f[%l]the%f[%L]") then
+    warn(msg, "»the« gefunden – möglicherweise nicht vollständig übersetzt.")
   end
   --warn(msg,"test")
 end
 
 function warn(msg, warning)
-  function color(n) return os.getenv("USERPROFILE") == nil and string.char(0x1B) .. "[" .. n .. "m" or "" end
+  function color(n) return os.getenv("TERM") ~= nil and string.char(0x1B) .. "[" .. n .. "m" or "" end
   function fmtmsg(s) return "\"" .. s:gsub("\\n(.)", "\\n\"\n\"%1") .. "\"" end
   print(color(32) .. "id: " .. msg.id .. color(0))
+  for i, comment in ipairs(msg.comments) do
+    print(color(37) .. comment .. color(0))
+  end
   print(color(32) .. "msgid: " .. fmtmsg(msg.msgid) .. color(0))
   for k, v in pairs(msg) do
     if k:find("^msgstr") then
@@ -44,6 +50,7 @@ function poparser(fname)
     local msg = {
       id = id,
       comments = {},
+      fuzzy = false,
       msgid = "",
       msgstr = "",
     }
@@ -54,6 +61,9 @@ function poparser(fname)
     function parseline(line)
       if line:find("^#") then
         table.insert(msg.comments, line)
+        if line:find("^#,.*fuzzy") then
+          msg.fuzzy = true
+        end
         return
       end
 
@@ -86,6 +96,11 @@ function proofreadfile(fname)
   end
 end
 
-for _, fname in ipairs(arg) do
-  proofreadfile(fname)
+function main(arg)
+  if os.getenv("USERPROFILE") ~= nil then os.execute("chcp 65001 > nul") end
+  for _, fname in ipairs(arg) do
+    proofreadfile(fname)
+  end
 end
+
+main(arg)
