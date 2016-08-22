@@ -13,8 +13,8 @@ function proofread(msg, id, msgid, msgstr)
   if msgid:find("%s$") and not msgstr:find("%s$") then
     warn(msg, "Da im englischen Text Leerzeichen am Zeilenende sind, sollte das im deutschen Text auch so sein.")
   end
-  if msgid:find("seek") and not msgstr:find("[Ss]pr[iu]ng") and not msgstr:find("[Ss]eek") then
-    warn(msg, "»seek« sollte mit »springen/gesprungen« übersetzt werden. (Nicht mit »search«, da das zu viele andere Bedeutungen hat.)")
+  if msgid:find("seek") and msgstr:find("[Ss]uch") and not msgstr:find("[Ss]pr[iu]ng") and not msgstr:find("[Ss]eek") then
+    warn(msg, "»seek« sollte mit »springen/gesprungen« übersetzt werden. (Nicht mit »suchen«, da das zu viele andere Bedeutungen hat.)")
   end
   if msgstr:find("\"") then
     warn(msg, "Im deutschen Text sollten keine \"geraden\", sondern „diese“ oder »jene« Anführungszeichen benutzt werden.")
