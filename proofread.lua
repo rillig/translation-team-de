@@ -1,6 +1,8 @@
 -- usage: lua proofread.lua <file>…
 
-function proofread(msg, id, msgid, msgstr)
+function proofread(msg)
+  local msgid, msgstr = msg.msgid, msg.msgstr
+
   if msgstr == "" or msgstr == msgid or msg.fuzzy then
     return
   end
@@ -22,20 +24,19 @@ function proofread(msg, id, msgid, msgstr)
   if msgstr:find("%f[%l]the%f[%L]") then
     warn(msg, "»the« gefunden – möglicherweise nicht vollständig übersetzt.")
   end
-  --warn(msg,"test")
 end
 
 function warn(msg, warning)
-  function color(n) return os.getenv("TERM") ~= nil and string.char(0x1B) .. "[" .. n .. "m" or "" end
-  function fmtmsg(s) return "\"" .. s:gsub("\\n(.)", "\\n\"\n\"%1") .. "\"" end
+  local function color(n) return os.getenv("TERM") ~= nil and string.char(0x1B) .. "[" .. n .. "m" or "" end
+  local function fmtmsg(s) return "\"" .. s:gsub("\\n(.)", "\\n\"\n\"%1") .. "\"" end
   print(color(32) .. "id: " .. msg.id .. color(0))
-  for i, comment in ipairs(msg.comments) do
+  for _, comment in ipairs(msg.comments) do
     print(color(37) .. comment .. color(0))
   end
   print(color(32) .. "msgid: " .. fmtmsg(msg.msgid) .. color(0))
   for k, v in pairs(msg) do
     if k:find("^msgstr") then
-      print(k .. ": " .. fmtmsg(msg[k]))
+      print(k .. ": " .. fmtmsg(v))
     end
   end
   print(color(33) .. "W: " .. warning .. color(0))
@@ -46,7 +47,7 @@ function poparser(fname)
   local f = io.open(fname)
   local id = 0
 
-  function one()
+  local function one()
     local msg = {
       id = id,
       comments = {},
@@ -58,7 +59,7 @@ function poparser(fname)
 
     local lastcmd
 
-    function parseline(line)
+    local function parseline(line)
       if line:find("^#") then
         table.insert(msg.comments, line)
         if line:find("^#,.*fuzzy") then
@@ -67,14 +68,14 @@ function poparser(fname)
         return
       end
 
-      local s, e, cmd, str = line:find("^(%a+%S-) \"(.*)\"$")
+      local s, _, cmd, str = line:find("^(%a+%S-) \"(.*)\"$")
       if s then
         lastcmd = cmd
         msg[cmd] = (msg[cmd] or "") .. str
         return
       end
 
-      local s, e, str = line:find("^\"(.*)\"$")
+      local s, _, str = line:find("^\"(.*)\"$")
       if s then
         msg[lastcmd] = msg[lastcmd] .. str
       end
@@ -92,7 +93,7 @@ end
 
 function proofreadfile(fname)
   for msg in poparser(fname) do
-    proofread(msg, msg.id, msg.msgid, msg.msgstr)
+    proofread(msg)
   end
 end
 
