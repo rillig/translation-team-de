@@ -4,6 +4,7 @@ function proofread(msg, msgid, msgstr)
   if msgstr == "" or msgstr == msgid or msg.fuzzy then
     return
   end
+  --[[
   if msgid:find("^[Uu]sage:") and not msgstr:find("^Aufruf:") then
     warn(msg, "»usage« sollte mit »Aufruf« übersetzt werden.", "^%a+")
   end
@@ -24,6 +25,9 @@ function proofread(msg, msgid, msgstr)
   end
   if msgstr:find("%f[%l]the%f[%L]") then
     warn(msg, "»the« gefunden – möglicherweise nicht vollständig übersetzt.")
+  end--]]
+  if not msgid:find("%%[0-9]*[$]*[sdf]") ~= not msgstr:find("%%[0-9]*[$]*[sdf]") then
+    warn(msg, "Prozent")
   end
 end
 
@@ -61,6 +65,7 @@ function warn(msg, warning, redpattern)
     return "\"" .. s:gsub("\\n(.)", "\\n\"\n\"%1") .. "\""
   end
 
+  print(color(32) .. "file: " .. msg.file .. color(0))
   print(color(32) .. "id: " .. msg.id .. color(0))
   for _, comment in ipairs(msg.comments) do
     print(color(37) .. comment .. color(0))

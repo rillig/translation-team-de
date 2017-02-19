@@ -90,8 +90,9 @@ end
 local Message = {}
 Message.__index = Message
 
-function Message:new(id)
+function Message:new(file, id)
   return setmetatable({
+    file = file,
     id = id,
     comments = {},
     fuzzy = false,
@@ -179,7 +180,7 @@ function File:parse(input)
 
   local lineno = 1
   local function messages()
-    local msg = Message:new(id)
+    local msg = Message:new(input, id)
     id = id + 1
 
     while lineno <= #lines do
