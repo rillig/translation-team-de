@@ -4,10 +4,13 @@ Dokumentensammlung für das [Deutsch-Team](http://translationproject.org/team/de
 
 Anmerkung: die hier aufgezählten Dokumente sind keine Richtlinien, die man unbedingt befolgen muss, sondern freiwillig.
 
-# Allgemeines
+# Infos für Neulinge
 
-* http://www.suse.de/~ke/GNU/trans/l10n-de.html (von 2001)
-* ftp://ftp.gwdg.de/pub/gnu2/i18n/l10n/de/pre-release/i18n-de.shar (von 1996)
+* Der erste Anlaufpunkt für alles rund ums Übersetzen ist die [Mailingliste](https://sourceforge.net/projects/translation/lists/translation-team-de). Auch wenn dort meistens wenig los ist, sind Fragen trotzdem gern gesehen und werden auch beantwortet.
+
+* Die einzig wahre Quelle für die zu übersetzenden Texte ist [die Teamseite](https://translationproject.org/team/de.html), denn dort landen die von den Projekten zur Übersetzung freigegebenen Versionen.
+
+* Bevor du anfängst, ein Projekt zu übersetzen, frag lieber noch mal kurz auf der Mailingliste nach, damit sich nicht zwei Leute unnötig Arbeit machen.
 
 # Übersetzen
 
