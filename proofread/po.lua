@@ -162,6 +162,12 @@ function File:parse(input)
       if line:find("^#,.*fuzzy") then
         msg.fuzzy = true
       end
+      if line:find("^#,.*gcc-internal-format") then
+        msg.gcc_internal_format = true
+      end
+      if line:find("^#,.*c-format") then
+        msg.c_format = true
+      end
       return
     end
 
@@ -199,7 +205,7 @@ function File:parse(input)
 end
 
 function File:write(filename)
-  local f = io.open(filename .. ".tmp", "wb")
+  local f = assert(io.open(filename .. ".tmp", "wb"))
   local separator = ""
   for _, message in ipairs(self.messages) do
     f:write(separator)

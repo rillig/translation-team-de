@@ -1,10 +1,47 @@
 -- usage: lua proofread.lua <file>…
 
+function extract_gcc_internal_percent(str)
+  local percents = ""
+  local s = str
+  while s ~= "" do
+    local _, _, prefix = s:find("^(%%[#.lqz0-9]*[<>{}CDEFHILRTXZderstuvx])")
+    if prefix then
+      percents = percents .. prefix
+      s = s:sub(1 + #prefix)
+    elseif s:find("^%%%%") then
+      s = s:sub(3)
+    elseif s:find("^%%") then
+      error(("extract_gcc_internal_percent: '%s' in '%s'"):format(s, str), 0)
+    else
+      s = s:sub(2)
+    end
+  end
+  return percents
+end
+
+function extract_c_format_percent(str)
+  local percents = ""
+  local s = str
+  while s ~= "" do
+    local _, _, prefix = s:find("^(%%[#.lz0-9]*[dfosux])")
+    if prefix then
+      percents = percents .. prefix
+      s = s:sub(1 + #prefix)
+    elseif s:find("^%%%%") then
+      s = s:sub(3)
+    elseif s:find("^%%") then
+      error(("extract_c_format_percent: '%s' in '%s'"):format(s, str), 0)
+    else
+      s = s:sub(2)
+    end
+  end
+  return percents
+end
+
 function proofread(msg, msgid, msgstr)
   if msgstr == "" or msgstr == msgid or msg.fuzzy then
     return
   end
-  --[[
   if msgid:find("^[Uu]sage:") and not msgstr:find("^Aufruf:") then
     warn(msg, "»usage« sollte mit »Aufruf« übersetzt werden.", "^%a+")
   end
@@ -15,19 +52,36 @@ function proofread(msg, msgid, msgstr)
     warn(msg, "Da im englischen Text Leerzeichen am Zeilenende sind, sollte das im deutschen Text auch so sein.")
   end
   if msgid:find("seek") and msgstr:find("[Ss]uch") and not msgstr:find("[Ss]pr[iu]ng") and not msgstr:find("[Ss]eek") then
-    warn(msg, "»seek« sollte mit »springen/gesprungen« übersetzt werden. (Nicht mit »suchen«, da das zu viele andere Bedeutungen hat.)", "[Ss]uch%a*")
+    warn(msg,
+      "»seek« sollte mit »springen/gesprungen« übersetzt werden. " ..
+      "(Nicht mit »suchen«, da das zu viele andere Bedeutungen hat.)",
+      "[Ss]uch%a*")
   end
   if msgstr:find("\"") then
-    warn(msg, "Im deutschen Text sollten keine \"geraden\", sondern „diese“ oder »jene« Anführungszeichen benutzt werden.", "\\\"")
+    warn(msg,
+      "Im deutschen Text sollten keine \"geraden\", " ..
+      "sondern „diese“ oder »jene« Anführungszeichen benutzt werden.",
+      "\\\"")
     local corrected = autocorrectQuotes(msgstr)
     if false and corrected ~= msgstr and promptCorrect() then
     end
   end
   if msgstr:find("%f[%l]the%f[%L]") then
     warn(msg, "»the« gefunden – möglicherweise nicht vollständig übersetzt.")
-  end--]]
-  if not msgid:find("%%[0-9]*[$]*[sdf]") ~= not msgstr:find("%%[0-9]*[$]*[sdf]") then
-    warn(msg, "Prozent")
+  end
+  if not msg.gcc_internal_format and not msg.c_format then
+    local msgid_percent = extract_gcc_internal_percent(msgid)
+    local msgstr_percent = extract_gcc_internal_percent(msgstr)
+    if msgid_percent ~= msgstr_percent then
+      warn(msg, ("Prozent in unformatiert '%s' '%s'"):format(msgid_percent, msgstr_percent))
+    end
+  end
+  if msg.c_format then
+    local msgid_fmt = msgid:find("%%[0-9]*[$]*[sdf]")
+    local msgstr_fmt = msgstr:find("%%[0-9]*[$]*[sdf]")
+    if not msgid_fmt ~= not msgstr_fmt then
+      warn(msg, "Prozent mit Positionsangabe")
+    end
   end
 end
 
@@ -80,7 +134,7 @@ function warn(msg, warning, redpattern)
   print("")
 end
 
-function proofreadfile(fname)
+function proofread_file(fname)
   local file = require("proofread/po").File:new()
   file:parse(fname)
   for _, msg in ipairs(file.messages) do
@@ -92,9 +146,11 @@ function proofreadfile(fname)
 end
 
 function main(arg)
-  if os.getenv("USERPROFILE") ~= nil then os.execute("chcp 65001 > nul") end
+  if os.getenv("USERPROFILE") and not os.getenv("HOME") then
+    os.execute("chcp 65001 > nul")
+  end
   for _, fname in ipairs(arg) do
-    proofreadfile(fname)
+    proofread_file(fname)
   end
 end
 
